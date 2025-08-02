@@ -112,19 +112,30 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             // 6. Add content to PDF with adjusted positions to account for border
-            const contentStartY = 50; // Start below the border
+            const contentStartY = 42; // Start below the border
             let yPosition = contentStartY;
 
             // Main heading
-            doc.setFontSize(28);
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(0, 0, 0);
-            doc.textWithLink('MINUTES OF MEETING', 105, yPosition, {
-                align: 'center',
-                underline: true
-            });
-            yPosition += 25;
+doc.setFontSize(28);
+doc.setFont(undefined, 'bold');
+doc.setTextColor(0, 0, 0);
 
+// 1. First add the text (centered)
+const titleText = 'MINUTES OF MEETING';
+const textWidth = doc.getStringUnitWidth(titleText) * doc.getFontSize() / doc.internal.scaleFactor;
+doc.text(titleText, 105, yPosition, { align: 'center' });
+
+// 2. Then add the manual underline
+const underlineY = yPosition + 2; // 2mm below text
+const centerX = 105; // Same center as text
+doc.line(
+  centerX - textWidth/2, // Start X (left position)
+  underlineY,            // Y position
+  centerX + textWidth/2, // End X (right position)
+  underlineY             // Y position
+);
+
+yPosition += 25; // Adjust spacing as needed
             // Set consistent left margin and spacing
             const labelLeftMargin = 20;  // 20mm from left
             const valueLeftMargin = 40;  // 40mm from left (20mm after label)
@@ -136,14 +147,14 @@ document.addEventListener('DOMContentLoaded', function () {
             doc.text('Domain:', labelLeftMargin, yPosition);
             doc.setFont(undefined, 'normal');
             doc.text(`${department || 'Not specified'}`, valueLeftMargin, yPosition);
-            yPosition += 10;
+            yPosition += 8;
 
             // Date
             doc.setFont(undefined, 'bold');
             doc.text('Date:', labelLeftMargin, yPosition);
             doc.setFont(undefined, 'normal');
             doc.text(`${formattedDate || 'Not specified'}`, valueLeftMargin, yPosition);
-            yPosition += 10;
+            yPosition += 8;
 
             // Time
             doc.setFont(undefined, 'bold');
@@ -151,14 +162,14 @@ document.addEventListener('DOMContentLoaded', function () {
             doc.setFont(undefined, 'normal');
             doc.text(`${formatTime(startTime) || 'Not specified'} to ${formatTime(endTime) || 'Not specified'}`,
                 valueLeftMargin, yPosition);
-            yPosition += 10;
+            yPosition += 8;
 
             // Agenda
             doc.setFont(undefined, 'bold');
             doc.text('Agenda:', labelLeftMargin, yPosition);
             doc.setFont(undefined, 'normal');
             doc.text(`${agenda || 'Not specified'}`, valueLeftMargin, yPosition);
-            yPosition += 15;
+            yPosition += 8;
 
             // Horizontal line
             doc.line(15, yPosition, 195, yPosition);
@@ -171,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
             doc.text('Discussed:', 20, yPosition);  // Changed - to : for consistency
             doc.setFont(undefined, 'normal');  // Reset to normal font
             yPosition += 10;
-            doc.setFontSize(12);
+            doc.setFontSize(14);
 
             minutesPoints.forEach((point, index) => {
                 if (yPosition > 270) { // Prevent overflow
@@ -180,7 +191,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     doc.addImage(borderImage, 'PNG', 0, 0, imgWidth, imgHeight);
                     yPosition = contentStartY;
                 }
-                doc.text(`${index + 1}. ${point.trim()}`, 25, yPosition);
+                //doc.text(`${index + 1}. ${point.trim()}`, 25, yPosition);
+                doc.text(`• ${point.trim()}`, 40, yPosition);
                 yPosition += 10;
             });
 
