@@ -125,17 +125,19 @@ const titleText = 'MINUTES OF MEETING';
 const textWidth = doc.getStringUnitWidth(titleText) * doc.getFontSize() / doc.internal.scaleFactor;
 doc.text(titleText, 105, yPosition, { align: 'center' });
 
-// 2. Then add the manual underline
-const underlineY = yPosition + 2; // 2mm below text
-const centerX = 105; // Same center as text
+// 2. Then add the bold manual underline
+const underlineY = yPosition + 2;
+const currentLineWidth = doc.internal.getLineWidth();
+doc.setLineWidth(0.5); // Thicker line for bold effect
 doc.line(
-  centerX - textWidth/2, // Start X (left position)
-  underlineY,            // Y position
-  centerX + textWidth/2, // End X (right position)
-  underlineY             // Y position
+  105 - textWidth/2,
+  underlineY,
+  105 + textWidth/2,
+  underlineY
 );
+doc.setLineWidth(currentLineWidth); // Restore default
 
-yPosition += 25; // Adjust spacing as needed
+yPosition += 12; // Adjust spacing as needed
             // Set consistent left margin and spacing
             const labelLeftMargin = 20;  // 20mm from left
             const valueLeftMargin = 40;  // 40mm from left (20mm after label)
@@ -171,39 +173,45 @@ yPosition += 25; // Adjust spacing as needed
             doc.text(`${agenda || 'Not specified'}`, valueLeftMargin, yPosition);
             yPosition += 8;
 
-            // Horizontal line
-            doc.line(15, yPosition, 195, yPosition);
-            yPosition += 10;
+           // Horizontal line
+doc.line(15, yPosition, 195, yPosition);
+yPosition += 8;
 
+// Discussed section
+doc.setFontSize(12);
+doc.setFont(undefined, 'bold');
+doc.text('Discussed:', 20, yPosition);
+doc.setFont(undefined, 'normal');
+yPosition += 7;
 
-            // Discussed points
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');  // Set font to bold
-            doc.text('Discussed:', 20, yPosition);  // Changed - to : for consistency
+// Process each discussion point with proper bullet points
+minutesPoints.forEach((point) => {
+    // Split long text into multiple lines
+    const lines = doc.splitTextToSize(point.trim(), 160); // 160mm width
+    
+    lines.forEach((line, lineIndex) => {
+        if (yPosition > 270) { // Check page overflow
+            doc.addPage();
+            doc.addImage(borderImage, 'PNG', 0, 0, imgWidth, imgHeight);
+            yPosition = contentStartY;
+        }
+        
+        // Only add bullet point to first line of each point
+        const textToRender = lineIndex === 0 ? `• ${line}` : `  ${line}`;
+        doc.text(textToRender, 30, yPosition);
+        yPosition += 7;
+    });
+});
+
+yPosition += 5;
+
+// Absentees
+doc.setFontSize(12);
+doc.setFont(undefined, 'bold');
+doc.text('Absentees:', 20, yPosition);
+// ... rest of absentees code ...nged - to : for consistency
             doc.setFont(undefined, 'normal');  // Reset to normal font
-            yPosition += 10;
-            doc.setFontSize(14);
-
-            minutesPoints.forEach((point, index) => {
-                if (yPosition > 270) { // Prevent overflow
-                    doc.addPage();
-                    // Add border to new page if needed
-                    doc.addImage(borderImage, 'PNG', 0, 0, imgWidth, imgHeight);
-                    yPosition = contentStartY;
-                }
-                //doc.text(`${index + 1}. ${point.trim()}`, 25, yPosition);
-                doc.text(`• ${point.trim()}`, 40, yPosition);
-                yPosition += 10;
-            });
-
-            yPosition += 15;
-
-            // Absentees
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');  // Set font to bold
-            doc.text('Absentees:', 20, yPosition);  // Changed - to : for consistency
-            doc.setFont(undefined, 'normal');  // Reset to normal font
-            yPosition += 10;
+            yPosition += 8;
             doc.setFontSize(12);
 
             absenteesList.forEach((name, index) => {
