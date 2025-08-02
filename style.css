@@ -1,0 +1,11 @@
+/* Add any custom styles here if needed */
+#momContent {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+    #momContent {
+        font-size: 14px;
+    }
+}

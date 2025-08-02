@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techy MOM Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            teal: '#00f5d4',
+                            blue: '#00bbf9',
+                            purple: '#9b5de5',
+                            pink: '#f15bb5',
+                            yellow: '#fee440',
+                        }
+                    },
+                    backgroundImage: {
+                        'tech-pattern': "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2IiBoZWlnaHQ9IjYiPgo8cmVjdCB3aWR0aD0iNiIgaGVpZ2h0PSI2IiBmaWxsPSIjMDAwMDAwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMNiA2WiIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9IiMxMTExMTEiPjwvcGF0aD4KPHBhdGggZD0iTTYgMEwwIDZaIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iIzExMTExMSI+PC9wYXRoPgo8L3N2Zz4=')",
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 min-h-screen text-gray-100">
+    <!-- Animated background gradient -->
+    <div class="fixed inset-0 bg-gradient-to-br from-cyan-900 via-gray-900 to-purple-900 opacity-90 -z-10"></div>
+    <div class="fixed inset-0 bg-tech-pattern opacity-5 -z-20"></div>
+    
+    <!-- Glowing orb effects -->
+    <div class="fixed w-64 h-64 rounded-full bg-cyber-teal opacity-20 blur-3xl -top-32 -left-32 -z-10 animate-pulse"></div>
+    <div class="fixed w-64 h-64 rounded-full bg-cyber-purple opacity-20 blur-3xl -bottom-32 -right-32 -z-10 animate-pulse delay-1000"></div>
+    
+    <div class="container mx-auto px-4 py-8 relative">
+        <!-- Header with gradient text -->
+        <h1 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyber-teal via-cyber-blue to-cyber-purple">
+            MOM Generator
+        </h1>
+        
+        <!-- Input Form with glass morphism effect -->
+        <div class="bg-gray-800/50 backdrop-blur-md rounded-xl shadow-2xl p-6 mb-8 border border-gray-700/50">
+            <h2 class="text-xl font-semibold mb-4 text-cyber-teal">Meeting Details</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Department -->
+                <div>
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Department</label>
+                    <input type="text" id="department" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition">
+                </div>
+                
+                <!-- Date -->
+                <div>
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Date</label>
+                    <input type="date" id="date" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition">
+                </div>
+                
+                <!-- Start Time -->
+                <div>
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Start Time</label>
+                    <input type="time" id="startTime" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition">
+                </div>
+                
+                <!-- End Time -->
+                <div>
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">End Time</label>
+                    <input type="time" id="endTime" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition">
+                </div>
+                
+                <!-- Agenda -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Agenda</label>
+                    <textarea id="agenda" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition" rows="3"></textarea>
+                </div>
+                
+                <!-- Absentees -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Absentees (separate with semicolons)</label>
+                    <input type="text" id="absentees" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition" placeholder="e.g., Roy; Krish; Nathan">
+                </div>
+                
+                <!-- Minutes of Meeting -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-cyber-blue mb-1">Minutes of Meeting (separate points with semicolons)</label>
+                    <textarea id="minutes" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyber-teal transition" rows="5" placeholder="Enter points separated by ;"></textarea>
+                </div>
+            </div>
+            
+            <button id="generateBtn" class="mt-6 bg-gradient-to-r from-cyber-blue to-cyber-purple text-white px-6 py-3 rounded-lg hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-cyber-blue/30">
+                Generate MOM
+            </button>
+        </div>
+        
+        <!-- PDF Preview -->
+        <div id="pdfPreview" class="bg-gray-800/50 backdrop-blur-md rounded-xl shadow-2xl p-6 hidden border border-gray-700/50">
+            <h2 class="text-xl font-semibold mb-4 text-cyber-teal">MOM Preview</h2>
+            <div id="momContent" class="p-6 bg-gray-900/50 rounded-lg border border-gray-700/50">
+                <!-- This will be filled by JavaScript -->
+            </div>
+            <button id="downloadBtn" class="mt-6 bg-gradient-to-r from-cyber-teal to-cyber-blue text-white px-6 py-3 rounded-lg hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-cyber-teal/30 w-full">
+                Download PDF
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
